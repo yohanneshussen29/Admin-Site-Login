@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Save or Delete Student</title>
+  <link rel="icon" type="image/x-icon" href="./consumer.png">
+  <style>
+     body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f4f8;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    h1 {
+      text-align: center;
+      margin-top: 20px;
+    }
+    #studentList {
+      list-style-type: none;
+      padding: 0;
+      text-align: center;
+    }
+    #studentList li {
+      padding: 5px;
+      margin: 5px;
+      background-color: #e2e2e2;
+      border-radius: 5px;
+    }
+    #editForm {
+      margin: 20px;
+      padding: 20px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    form label {
+      display: block;
+      margin-bottom: 8px;
+    }
+    form input, form select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 1em;
+            background-color: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body.dark-mode table {
+            background-color: #2e3b4e;
+            color: #f0f4f8;
+        }
+
+        table thead tr {
+            background-color: #009879;
+            color: white;
+        }
+
+        table th, table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        table tbody tr:nth-child(even) {
+            background-color: #f3f3f3;
+            color: black;
+        }
+
+        body.dark-mode table tbody tr:nth-child(even) {
+            background-color: #3e4a5e;
+            color: #f0f4f8;
+        }
+
+        @media screen and (max-width: 1075px) {
+            .container {
+                overflow-x: auto;
+            }
+
+            table {
+                width: 100%;
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+                border-collapse: collapse;
+            }
+            #signupForm {
+              width: 80%;
+        margin: 0 auto;
+        background-color: #acb9c4;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+            button {
+            font-size: 14px;
+        }
+        }
+        button {
+      width: 100%;
+      padding: 10px;
+      background-color: #6a0dad;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #5b0091;
+    }
+    .back {
+      width: 117px;
+      padding: 10px;
+      font-size: 14px;
+  }
+</style>
+    
+</head>
+<body>
+  <h1>Student Management</h1>
+  <ul id="studentList"></ul>
+  <a href="./Choose One.html"><button type="button" class="back">Back / ለመመለስ</button></a>
+  <br><br>
+  <!-- Edit Form -->
+  <div id="editForm" style="display: none;">
+    <form>
+      <label>Name: <input type="text"  reqired id="studentName"></label><br>
+      <label>Father Name: <input type="text"  reqired id="studentFatherName"></label><br>
+      <label>Grandfather Name: <input type="text"  reqired id="studentGrandFatherName"></label><br>
+      <label>Mother Name: <input type="text"  reqired id="studentMotherName"></label><br>
+      <label>Christian Name: <input type="text"  reqired id="studentChristianName"></label><br>
+      <label>Age: <input type="number"  reqired id="studentAge"></label><br>
+      <label>Birth Date: <input type="date"  reqired id="studentBirthDate"></label><br>
+      <label>Gender:
+        <select   reqired id="studentGender" required>
+          <option value="">Gender / ጾታ</option>
+          <option value="Male / ወንድ">Male / ወንድ</option>
+          <option value="Female / ሴት">Female / ሴት</option>
+        </select>
+      </label><br>
+      <label>Phone Number: <input type="text"  reqired id="studentPhoneNumber"></label><br>
+      <label>Class Status:
+        <select name="Class Status"  reqired id="studentClassStatus" >
+          <option value="">Class Status / የትምህርት ሁኔታ</option>
+          <option value="Nothing">I Have No Teach / ምንም አልተማርኩም.</option>
+          <option value="G 1 Student">I Born G 1 Student / 1ኛ ክፍል እየተማርኩ ነው.</option>
+          <option value="G 2 Student">I Born G 2 Student / 2ኛ ክፍል እየተማርኩ ነው.</option>
+          <option value="G 3 Student">I Born G 3 Student / 3ኛ ክፍል እየተማርኩ ነው.</option>
+          <option value="G 4 Student">I Born G 4 Student / 4ኛ ክፍል እየተማርኩ ነው.</option>
+          <option value="G 5 Student">I Born G 5 Student / 5ኛ ክፍል እየተማርኩ ነው.</option>
+          <option value="G 6 Student">I Born G 6 Student / 6ኛ ክፍል እየተማርኩ ነው.</option>
+          <option value="G 7 Student">I Born G 7 Student / 7ኛ ክፍል እየተማርኩ ነው.</option>
+          <option value="G 8 Student">I Born G 8 Student / 8ኛ ክፍል እየተማርኩ ነው.</option>
+          <option value="G 9 Student">I Born G 9 Student / 9ኛ ክፍል እየተማርኩ ነው.</option>
+          <option value="G 10 Student">I Born G 10 Student / 10ኛ ክፍል እየተማርኩ ነው.</option>
+          <option value="G 11 Student">I Born G 11 Student / 11ኛ ክፍል እየተማርኩ ነው.</option>
+          <option value="G 12 Student">I Born G 12 Student / 12ኛ ክፍል እየተማርኩ ነው.</option>
+          <option value="Finished">I Have Finished Class / ጨርሻለው.</option>
+        </select>
+      </label><br>
+      <label>Password: <input type="password"  reqired id="studentPassword"></label><br>
+      <button type="submit" onclick="saveStudent()">Save</button>
+    </form>
+  </div>
+  <table id="studentTable" border="1">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Father's Name</th>
+        <th>Grandfather's Name</th>
+        <th>Mother's Name</th>
+        <th>Christian Name</th>
+        <th>Age</th>
+        <th>Birth Date</th>
+        <th>Gender</th>
+        <th>Phone Number</th>
+        <th>Class Status</th>
+        <th>Password</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+       <td></td>
+       <td></td>
+       <td></td>
+       <td></td>
+       <td></td>
+       <td></td>
+       <td></td>
+       <td></td>
+       <td></td>
+       <td></td>
+       <td></td>
+    </tbody>
+  </table>
+  <script>
+
+// Toggle the menu links visibility
+function toggleMenu() {
+    const menuLinks = document.getElementById('menuLinks');
+    const lines = document.querySelectorAll('.menu-btn div');
+
+    // Toggle visibility with animation
+    menuLinks.classList.toggle('visible');
+
+    // Toggle the hamburger icon to an X (cross) shape
+    lines[0].classList.toggle('toggle-top');
+    lines[1].classList.toggle('toggle-middle');
+    lines[2].classList.toggle('toggle-bottom');
+  }
+
+    // API Endpoints
+    const STORE_API_URL = 'https://bakend-server-7.onrender.com/store';
+    const USERS_API_URL = 'https://bakend-server-7.onrender.com/users';
+
+    // Store the current student's ID globally
+    let currentStudentId = null;
+
+    // Function to fetch a student and populate the form for editing
+    function editStudent(studentId) {
+      currentStudentId = studentId; // Set the global student ID
+      fetch(`${STORE_API_URL}/${studentId}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Student not found: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(student => {
+          // Populate form fields with student data
+          document.getElementById('studentName').value = student.name;
+          document.getElementById('studentFatherName').value = student.fatherName;
+          document.getElementById('studentGrandFatherName').value = student.grandFatherName;
+          document.getElementById('studentMotherName').value = student.motherName;
+          document.getElementById('studentChristianName').value = student.christianName;
+          document.getElementById('studentAge').value = student.age;
+          document.getElementById('studentBirthDate').value = student.birthDate;
+          document.getElementById('studentGender').value = student.birthDate;
+          document.getElementById('studentPhoneNumber').value = student.phoneNumber;
+          document.getElementById('studentClassStatus').value = student.classStatus;
+          document.getElementById('studentPassword').value = student.password;
+
+          // Display the edit form
+          document.getElementById('editForm').style.display = 'block';
+        })
+        .catch(error => {
+          console.error('Error fetching student:', error);
+          alert('Failed to fetch student.');
+        });
+    }
+
+    // Function to save the student to the /users database and delete it from /store
+    function saveStudent() {
+      const updatedStudent = {
+        name: document.getElementById('studentName').value,
+        fatherName: document.getElementById('studentFatherName').value,
+        grandFatherName: document.getElementById('studentGrandFatherName').value,
+        motherName: document.getElementById('studentMotherName').value,
+        christianName: document.getElementById('studentChristianName').value, 
+        age: parseInt(document.getElementById('studentAge').value),
+        birthDate: document.getElementById('studentBirthDate').value,
+        gender:document.getElementById('studentGender').value,
+        phoneNumber: document.getElementById('studentPhoneNumber').value,
+        classStatus: document.getElementById('studentClassStatus').value,
+        password: document.getElementById('studentPassword').value
+      };
+
+      // Save to /users database
+      fetch(USERS_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedStudent)
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Failed to save student to Users: / ይሄን ተማሪ ወደ ዋናው የተማሪዎች ማስቀመጫ መላክ አልተቻለም እባክዎ እንደገና እሞክሩ! ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log('Student saved to Users: / ይሄ ተማሪ ወደ ተማሪዎች ማስቀመጫ በተሳካ ሁኔታ ተልኳል።።', data);
+
+          // After saving to /users, delete from /store
+          return fetch(`${STORE_API_URL}/${currentStudentId}`, {
+            method: 'DELETE'
+          });
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Failed to delete student from Store: ${response.status}`);
+          }
+          console.log('Student deleted from Store.');
+          alert('Student successfully moved to Users. / ይሄ ተማሪ ወደ ተማሪዎች ማስቀመጫ በተሳካ ሁኔታ ተልኳል።።');
+
+          // Hide the form and refresh the list of students
+          document.getElementById('editForm').style.display = 'none';
+          showStudents();
+        })
+        .catch(error => {
+          console.error('Error saving student:', error);
+          alert('Failed to save student to Users. / ይሄን ተማሪ ወደ ዋናው የተማሪዎች ማስቀመጫ መላክ አልተቻለም እባክዎ እንደገና እሞክሩ!');
+        });
+    }
+
+    // Function to delete a student from the /store database
+    function deleteStudent(studentId) {
+      if (confirm('Are you sure you want to delete this student? / ይሄን ተማሪ ለማጥፋት እርግጠኛ ነዎት?')) {
+        fetch(`${STORE_API_URL}/${studentId}`, { method: 'DELETE' })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(`Failed to delete student: / ተማሪውን ማጥፋት አልተቻለም! ${response.status}`);
+            }
+            console.log('Student deleted successfully.');
+            alert('Student deleted successfully! / ተማሪው በተሳካ ሁኔታ ጠፍቷል።');
+            showStudents(); // Refresh the list of students
+          })
+          .catch(error => {
+            console.error('Error deleting student:', error);
+            alert('Failed to delete student. / ተማሪውን ማጥፋት አልተቻለም!');
+          });
+      }
+    }
+
+    function showStudents() {
+  fetch(STORE_API_URL)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch students: / ለጊዜው ተማሪዎችን ማግኘት አይቻልም እባክዎ እንደገና ይሞክሩ! ${response.status}`
+        );
+      }
+      return response.json();
+    })
+    .then(students => {
+      const studentTableBody = document.querySelector('#studentTable tbody');
+      studentTableBody.innerHTML = ''; // Clear the table body
+
+      students.forEach(student => {
+        const row = document.createElement('tr');
+        
+        // Create table cells for each student detail
+        row.innerHTML = `
+          <td>${student.name}</td>
+          <td>${student.fatherName}</td>
+          <td>${student.grandFatherName}</td>
+          <td>${student.motherName}</td>
+          <td>${student.christianName}</td>
+          <td>${student.age}</td>
+          <td>${student.birthDate}</td>
+          <td>${student.gender}</td>
+          <td>${student.phoneNumber}</td>
+          <td>${student.classStatus}</td>
+          <td>${student.password}</td>
+          <td>
+            <button onclick="editStudent('${student._id}')">Edit</button> <br>
+            <button onclick="deleteStudent('${student._id}')">Delete</button>
+          </td>
+        `;
+        
+        studentTableBody.appendChild(row);
+      });
+    })
+    .catch(error => {
+      console.error('Error fetching students:', error);
+      alert(
+        'Failed to fetch students. / ለጊዜው ተማሪዎችን ማግኘት አይቻልም እባክዎ እንደገና ይሞክሩ! '
+      );
+    });
+}
+
+
+    // Initialize the list of students on page load
+    window.onload = showStudents;
+  </script>
+</body>
+</html>

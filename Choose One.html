@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login and Session Management</title>
+  <link rel="icon" type="image/x-icon" href="./consumer.png">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f4f8;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+    .login-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .login-box {
+      background-color: #acb9c4;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    h2 {
+      color: #004b9b;
+      font-size: 19px;
+      text-align: center;
+      line-height: 1;
+    }
+
+    input {
+      width: 95%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      background-color: #6a0dad;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #5b0091;
+    }
+
+    .icon {
+      background-color: #6a0dad;
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .icon img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      margin: 5px;
+    }
+
+    .hidden {
+      display: none;
+    }
+    
+    .option-buttons {
+      margin-top: 10px;
+    }
+    
+    .option-buttons button {
+      margin: 5px;
+      background-color: #f44336;
+      color: white;
+    }
+    
+    .cancel-button {
+      background-color: #4CAF50;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="login-container">
+    <div class="login-box">
+        <div class="icon">
+            <img src="./two.png" alt="Admin Logo">
+        </div>
+        <h2>Welcome Admin , Please Get In Anywhere</h2>
+        <form id="loginForm">
+            <input type="text" id="username" placeholder="Username" value="" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+
+        <div id="messageContainer" style="text-align: center; margin-top: 10px;"></div>
+
+        <div id="changePasswordContainer" class="hidden">
+            <form id="changePasswordForm" class="hidden">
+                <h2>Change Password</h2>
+                <input type="password" id="newPassword" placeholder="New Password" required>
+                <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+                <button type="submit">Change Password</button>
+            </form>
+            <a href="./Admin Add User.html">
+              <button type="button">Admin Add Student</button>
+            </a>
+            <br><br>
+            <a href="./Admin Mark Protection.html">
+              <button type="button">Admin Mark Protection</button>
+            </a>
+            <br><br>
+            <a href="./Admin Save Or Delete.html">
+              <button type="button">Student Save Or Delete</button>
+            </a><br><br>
+            <h2>Change Password</h2>
+            <button id="changePasswordButton">Change Password</button>
+            <button id="endSessionButton">End Session</button>
+        </div>
+
+        <!-- Session Expiration Options -->
+        <div id="sessionExpirationOptions" class="hidden">
+            <p>Your session is about to expire. Do you want to continue or log out?</p>
+            <div class="option-buttons">
+                <button id="cancelSessionButton" class="cancel-button">Cancel Expiration</button>
+                <button id="endSessionButton2" class="end-session-button">End Session</button>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = 'https://bakend-server-7.onrender.com';
+    let loggedInUsername = null;
+    let sessionTimeout;
+    let sessionTimerActive = false;
+    let autoLogoutTimeout;
+    
+    function displayMessage(message, type = 'info') {
+        const messageContainer = document.getElementById('messageContainer');
+        messageContainer.textContent = message;
+        // Set message color based on type
+        if (type === 'success') {
+            messageContainer.style.color = 'green';
+        } else if (type === 'error') {
+            messageContainer.style.color = 'red';
+        } else {
+            messageContainer.style.color = 'black';
+        }
+
+        // Automatically clear the message after 5 seconds
+        setTimeout(() => {
+            messageContainer.textContent = '';
+        }, 5000); 
+    }
+
+    function startSessionTimer() {
+        // Clear any existing timer
+        clearTimeout(sessionTimeout);
+
+        // Set a timer for 1 minute (60000 ms)
+        sessionTimeout = setTimeout(() => {
+            document.getElementById('sessionExpirationOptions').classList.remove('hidden');
+
+            // Start the auto logout countdown (30 seconds)
+            autoLogoutTimeout = setTimeout(() => {
+                logoutUser();
+                displayMessage('Session expired. You have been logged out.', 'error');
+            }, 10000);
+            document.getElementById('changePasswordContainer').classList.add('hidden');
+        }, 60000);
+        
+    }
+
+    function logoutUser() {
+        loggedInUsername = null;
+        location.reload();
+        // Reset UI to login form
+        document.getElementById('loginForm').classList.remove('hidden');
+        document.getElementById('changePasswordContainer').classList.add('hidden');
+        document.getElementById('changePasswordForm').classList.add('hidden');
+        document.getElementById('sessionExpirationOptions').classList.add('hidden');  
+        // Optionally, notify the server to clear the session
+        fetch(`${API_URL}/logout`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+        }).catch(error => console.error('Error during logout:', error));
+        
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        fetch(`${API_URL}/adminLogin`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId: username, password })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                displayMessage('Login successful!', 'success');
+                loggedInUsername = data.username;
+
+                // Show change password section
+                document.getElementById('loginForm').classList.add('hidden');
+                document.getElementById('changePasswordContainer').classList.remove('hidden');
+                startSessionTimer();
+            } else {
+                displayMessage(data.error || 'Login failed', 'error');
+            }
+        })
+        .catch(error => console.error('Error during login:', error));
+    });
+
+    document.getElementById('changePasswordButton').addEventListener('click', function () {
+        this.classList.add('hidden');
+        document.getElementById('changePasswordForm').classList.remove('hidden');
+        startSessionTimer();
+    });
+
+    document.getElementById('changePasswordForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+
+        if (newPassword !== confirmPassword) {
+            displayMessage('Passwords do not match!', 'error');
+            return;
+        }
+
+        fetch(`${API_URL}/changePassword`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: loggedInUsername, password: newPassword })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                displayMessage('Password changed successfully!', 'success');
+                document.getElementById('changePasswordForm').reset();
+                document.getElementById('changePasswordForm').classList.add('hidden');
+                document.getElementById('changePasswordButton').classList.remove('hidden');
+                startSessionTimer();
+            } else {
+                displayMessage(data.error || 'Failed to change password', 'error');
+            }
+        })
+        .catch(error => console.error('Error changing password:', error));
+    });
+
+    document.getElementById('cancelSessionButton').addEventListener('click', function () {
+        document.getElementById('sessionExpirationOptions').classList.add('hidden');
+        displayMessage('Session extended.', 'success');
+        clearTimeout(autoLogoutTimeout); // Cancel the auto logout timer
+        startSessionTimer(); // Restart session timer
+
+        // Hide session options and show change password section again
+        document.getElementById('changePasswordContainer').classList.remove('hidden');
+    });
+
+  document.getElementById('endSessionButton').addEventListener('click', function () {
+    location.reload(); // This will reload the current page
+});
+document.getElementById('endSessionButton2').addEventListener('click', function () {
+    location.reload(); // This will reload the current page
+});
+
+  </script>
+</body>
+</html>
