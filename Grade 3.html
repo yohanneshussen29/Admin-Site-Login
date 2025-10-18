@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Save Input</title>
+  <link rel="icon" type="image/x-icon" href="./consumer.png">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f4f8;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* Dark Mode Styles */
+    body.dark-mode {
+      background-color: #1e1e1e;
+      color: #f0f4f8;
+    }
+
+    /* Container for All Content */
+    .container {
+      width: 87%;
+      max-width: 1200px;
+      margin: 20px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Class Status Filter at Top */
+    .filter-container {
+      width: 100%;
+      max-width: 400px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .filter-container label {
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .filter-container select {
+      padding: 10px;
+      border: 2px solid #494646;
+      border-radius: 5px;
+      background-color: #eeeeee;
+      font-size: 16px;
+      color: #1b1b1b;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+    }
+
+    /* Dark Mode for Filter */
+    body.dark-mode .filter-container select {
+      background-color: #2e3b4e;
+      color: #f0f4f8;
+      border: 2px solid #f0f4f8;
+    }
+
+    /* Login Container */
+    .login-container {
+      width: 100%;
+      max-width: 500px;
+      background-color: #ffffff;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-bottom: 40px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* Dark Mode for Login Container */
+    body.dark-mode .login-container {
+      background-color: #1d2630;
+      color: #f0f4f8;
+    }
+
+    #signupForm {
+      width: 50%;
+        margin: 0 auto;
+        background-color: #acb9c4;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        #signupForm input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            color: #1b1b1b;
+            border: none;
+        }
+        #signupForm input[type="hidden"] {
+            display: none;
+        }
+        .flex-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            color: #1b1b1b;
+        }
+        .flex-item {
+            flex: 1 1 calc(50% - 20px);
+            margin: 10px;
+            color: #1b1b1b;
+        }
+
+    /* Buttons */
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #6a0dad;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #5b0091;
+    }
+
+    .back-button {
+      background-color: #ccc;
+      margin-top: 10px;
+    }
+
+    .back-button:hover {
+      background-color: #bbb;
+    }
+
+    /* Definitions Header */
+    .difinations {
+      text-align: start;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    /* Hidden Class */
+    .hidden {
+      display: none;
+    }
+
+    /* User List Table Styles */
+    .user-list-container {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 1em;
+            background-color: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body.dark-mode table {
+            background-color: #2e3b4e;
+            color: #f0f4f8;
+        }
+
+        table thead tr {
+            background-color: #009879;
+            color: white;
+        }
+
+        table th, table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        table tbody tr:nth-child(even) {
+            background-color: #f3f3f3;
+            color: black;
+        }
+
+        body.dark-mode table tbody tr:nth-child(even) {
+            background-color: #3e4a5e;
+            color: #f0f4f8;
+        }
+
+        @media screen and (max-width: 1075px) {
+            .container {
+                overflow-x: auto;
+            }
+
+            table {
+                width: 100%;
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+                border-collapse: collapse;
+            }
+            #signupForm {
+              width: 80%;
+        margin: 0 auto;
+        background-color: #acb9c4;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+        }
+
+    /* Dark Mode Toggle Switch */
+    .switch-container {
+      position: fixed;
+      top: 20px;
+      left: 2px;
+      display: flex;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 34px;
+      height: 20px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 20px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 12px;
+      width: 12px;
+      border-radius: 50%;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+    }
+
+    input:checked + .slider {
+      background-color: #ffffff;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(14px);
+    }
+    select {
+      width: 100%;
+      padding: 9px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .menu-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    z-index: 1000;
+  }
+
+  .menu-btn div {
+    background-color: #000000;
+    height: 2px;
+    margin: 5px;
+    transition: all 0.3s ease;
+  }
+
+  .toggle-top {
+    transform: rotate(45deg) translate(3px, -4.5px);
+  }
+
+  .toggle-middle {
+    opacity: 0;
+  }
+
+  .toggle-bottom {
+    transform: rotate(-45deg) translate(5px, -5px);
+  }
+
+  /* Menu Links Container */
+  .menu-links {
+    position: absolute;
+    top: 60px;
+    left: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 200px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    pointer-events: none; /* Prevent clicks when hidden */
+  }
+
+  .menu-links.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .menu-links a {
+    display: block;
+    padding: 12px;
+    text-decoration: none;
+    color: #007bff;
+    font-size: 18px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .menu-links a:hover {
+    background-color: #f1f1f1;
+  }
+
+  .menu-links a:last-child {
+    border-bottom: none;
+  }
+  .back {
+      width: 117px;
+      padding: 10px;
+      font-size: 14px;
+  }
+  h1{
+    text-align: center;
+  }
+</style>
+    
+</head>
+<body>
+  <h1>Grade 3 Students Management</h1>
+    <a href="./Admin Mark Protection.html"><button type="button" class="back">Back / ለመመለስ</button></a>
+  <br><br>
+  <form id="signupForm">
+    <input type="hidden" id="userId" />
+    <div class="mb-4">
+        <input required type="text" id="name" placeholder="Name And Father Name And Grand Father Name" />
+    </div>
+    <div class="mb-4">
+      <input required type="password" id="password" placeholder="Password : Take The Password From The Stundent" />
+  </div>
+  <br>
+    <div class="mb-4">
+      <select name="Class Status" id="classStatus" class="input-group" required>
+        <option value="G 3 Student">Grade 3 Student / 3ኛ ክፍል እየተማርኩ ነው.</option>
+      </select>
+    </div>
+    <div class="flex-container">
+        <div class="flex-item">
+            <input required type="number" id="seasonOne" placeholder="Season One" />
+        </div>
+        <div class="flex-item">
+            <input required type="number" id="seasonTwo" placeholder="Season Two" />
+        </div>
+        <div class="flex-item">
+            <input required type="number" id="seasonThree" placeholder="Season Three" />
+        </div>
+        <div class="flex-item">
+            <input required type="number" id="seasonFour" placeholder="Season Four" />
+        </div>
+        <div class="flex-item">
+            <input required type="number" id="seasonFive" placeholder="Season Five" />
+        </div>
+        <div class="flex-item">
+            <input required type="number" id="seasonSix" placeholder="Season Six" />
+        </div>
+    </div>
+    <button type="submit">Submit</button>
+  </form> 
+
+  <h2>Grade 3 Students</h2>
+  <table id="userTable">
+    <thead>
+      <tr>
+        <th>User ID</th>
+        <th>Name</th>
+        <th>Password</th>
+        <th>Class Status</th>
+        <th>Season 1</th>
+        <th>Season 2</th>
+        <th>Season 3</th>
+        <th>Season 4</th>
+        <th>Season 5</th>
+        <th>Season 6</th>
+        <th>SUM</th>
+        <th>AVERAGE</th>
+        <th>RANK</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    const API_URL = 'https://bakend-server-7.onrender.com/save';
+
+    function loadUsers() {
+      fetch(API_URL)
+        .then(response => response.json())
+        .then(users => {
+          const gradeStudents = users.filter(user => user.classStatus === 'G 3 Student');
+
+          gradeStudents.forEach(user => {
+            user.sum = user.seasonOne + user.seasonTwo + user.seasonThree + user.seasonFour + user.seasonFive + user.seasonSix;
+            user.average = user.sum / 6;
+
+            if (user.average >= 90) user.rank = 'A';
+            else if (user.average >= 80) user.rank = 'B';
+            else if (user.average >= 70) user.rank = 'C';
+            else if (user.average >= 60) user.rank = 'D';
+            else if (user.average >= 50) user.rank = 'E';
+            else user.rank = 'F';
+          });
+
+          const userTable = document.getElementById('userTable').querySelector('tbody');
+          userTable.innerHTML = '';
+
+          if (gradeStudents.length === 0) {
+            const row = userTable.insertRow();
+            row.innerHTML = `<td colspan="14" style="text-align: center;">No Grade 3 students found</td>`;
+          } else {
+            gradeStudents.forEach(user => {
+              const row = userTable.insertRow();
+              row.innerHTML = `
+                <td>${user.userId}</td>
+                <td>${user.name}</td>
+                <td>${user.password}</td>
+                <td>${user.classStatus}</td>
+                <td>${user.seasonOne}</td>
+                <td>${user.seasonTwo}</td>
+                <td>${user.seasonThree}</td>
+                <td>${user.seasonFour}</td>
+                <td>${user.seasonFive}</td>
+                <td>${user.seasonSix}</td>
+                <td>${user.sum}</td>
+                <td>${user.average.toFixed(2)}</td>
+                <td>${user.rank}</td>
+                <td>
+                  <button onclick="editUser('${user.userId}')">Edit</button>
+                  <button onclick="deleteUser('${user.userId}')">Delete</button>
+                </td>
+              `;
+            });
+          }
+        })
+        .catch(error => console.error('Error loading users:', error));
+    }
+
+    function deleteUser(userId) {
+      if (!confirm('Are you sure you want to delete this student?')) return;
+      fetch(`${API_URL}/${userId}`, { method: 'DELETE' })
+        .then((response) => response.json())
+        .then(() => {
+          alert('Student deleted successfully!');
+          loadUsers();
+        })
+        .catch((error) => console.error('Error deleting student:', error));
+    }
+
+    function editUser(userId) {
+      fetch(`${API_URL}/${userId}`)
+        .then((response) => response.json())
+        .then((user) => {
+          if (user) {
+            document.getElementById('userId').value = user.userId;
+            document.getElementById('name').value = user.name || '';
+            document.getElementById('password').value = user.password || '';
+            document.getElementById('classStatus').value = user.classStatus || 'G 3 Student';
+            document.getElementById('seasonOne').value = user.seasonOne || 0;
+            document.getElementById('seasonTwo').value = user.seasonTwo || 0;
+            document.getElementById('seasonThree').value = user.seasonThree || 0;
+            document.getElementById('seasonFour').value = user.seasonFour || 0;
+            document.getElementById('seasonFive').value = user.seasonFive || 0;
+            document.getElementById('seasonSix').value = user.seasonSix || 0;
+          }
+        })
+        .catch((error) => {
+          console.error('Error fetching user data:', error);
+          alert('Failed to fetch user data.');
+        });
+    }
+
+    document.getElementById('signupForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+      const userId = document.getElementById('userId').value;
+      const user = {
+        name: document.getElementById('name').value,
+        password: document.getElementById('password').value,
+        classStatus: 'G 3 Student',
+        seasonOne: parseFloat(document.getElementById('seasonOne').value) || 0,
+        seasonTwo: parseFloat(document.getElementById('seasonTwo').value) || 0,
+        seasonThree: parseFloat(document.getElementById('seasonThree').value) || 0,
+        seasonFour: parseFloat(document.getElementById('seasonFour').value) || 0,
+        seasonFive: parseFloat(document.getElementById('seasonFive').value) || 0,
+        seasonSix: parseFloat(document.getElementById('seasonSix').value) || 0,
+      };
+
+      if (userId) {
+        fetch(`${API_URL}/${userId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(user),
+        })
+          .then((response) => response.json())
+          .then(() => {
+            alert('Student updated successfully!');
+            document.getElementById('signupForm').reset();
+            document.getElementById('userId').value = '';
+            loadUsers();
+          })
+          .catch((error) => console.error('Error updating student:', error));
+      } else {
+        fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(user),
+        })
+          .then((response) => response.json())
+          .then(() => {
+            alert('New Grade 3 student created successfully!');
+            document.getElementById('signupForm').reset();
+            loadUsers();
+          })
+          .catch((error) => {
+            console.error('Error creating student:', error);
+            alert('Failed to create student.');
+          });
+      }
+    });
+
+    loadUsers();
+  </script>
+</body>
+</html>
